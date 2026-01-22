@@ -4,9 +4,27 @@ const { genCode, buildVoucherLink, generateQrDataUrl } = require("../service/vou
 
 // Admin: list vouchers
 exports.adminList = async (req, res) => {
-  const items = await Voucher.find().sort({ createdAt: -1 }).lean();
+  const docs = await Voucher.find().sort({ createdAt: -1 }).lean();
+
+  const items = await Promise.all(
+    docs.map(async (v) => {
+      const link = buildVoucherLink(v.code);
+      const qrDataUrl = await generateQrDataUrl(link);
+
+      return {
+        code: v.code,
+        discountPercent: v.discountPercent,
+        expiresAt: v.expiresAt,
+        redeemedAt: v.redeemedAt,
+        link,
+        qrDataUrl,
+      };
+    })
+  );
+
   return res.json({ items });
 };
+
 
 // Admin: create vouchers
 exports.adminCreate = async (req, res) => {

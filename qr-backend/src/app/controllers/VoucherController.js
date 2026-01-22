@@ -1,6 +1,10 @@
-const Voucher = require("../model/Voucher");
-const VoucherRedeem = require("../model/VoucherRedeem");
-const { genCode, buildVoucherLink, generateQrDataUrl } = require("../service/voucherService");
+const Voucher = require('../model/Voucher');
+const VoucherRedeem = require('../model/VoucherRedeem');
+const {
+  genCode,
+  buildVoucherLink,
+  generateQrDataUrl,
+} = require('../service/voucherService');
 
 // Admin: list vouchers
 exports.adminList = async (req, res) => {
@@ -25,18 +29,25 @@ exports.adminList = async (req, res) => {
   return res.json({ items });
 };
 
-
 // Admin: create vouchers
 exports.adminCreate = async (req, res) => {
   const discountPercent = Number(req.body?.discountPercent ?? 10);
   const expiresInDays = Number(req.body?.expiresInDays ?? 30);
   const quantity = Math.min(100, Math.max(1, Number(req.body?.quantity ?? 1)));
 
-  if (!Number.isFinite(discountPercent) || discountPercent <= 0 || discountPercent > 90) {
-    return res.status(400).json({ message: "Giảm % không hợp lệ (1–90)." });
+  if (
+    !Number.isFinite(discountPercent) ||
+    discountPercent <= 0 ||
+    discountPercent > 90
+  ) {
+    return res.status(400).json({ message: 'Giảm % không hợp lệ (1–90).' });
   }
-  if (!Number.isFinite(expiresInDays) || expiresInDays <= 0 || expiresInDays > 3650) {
-    return res.status(400).json({ message: "expiresInDays không hợp lệ." });
+  if (
+    !Number.isFinite(expiresInDays) ||
+    expiresInDays <= 0 ||
+    expiresInDays > 3650
+  ) {
+    return res.status(400).json({ message: 'expiresInDays không hợp lệ.' });
   }
 
   const expiresAt = new Date(Date.now() + expiresInDays * 24 * 60 * 60 * 1000);
@@ -71,23 +82,25 @@ exports.adminCreate = async (req, res) => {
 
 // Store: check voucher (PIN đã check bằng middleware storeAuth)
 exports.storeCheck = async (req, res) => {
-  const code = String(req.params.code || "").toUpperCase();
+  const code = String(req.params.code || '').toUpperCase();
 
   const v = await Voucher.findOne({ code }).lean();
-  if (!v) return res.status(404).json({ message: "Voucher không tồn tại." });
-  if (v.expiresAt && new Date(v.expiresAt).getTime() < Date.now()) return res.status(410).json({ message: "Voucher đã hết hạn." });
-  if (v.redeemedAt) return res.status(409).json({ message: "Voucher đã được sử dụng." });
+  if (!v) return res.status(404).json({ message: 'Voucher không tồn tại.' });
+  if (v.expiresAt && new Date(v.expiresAt).getTime() < Date.now())
+    return res.status(410).json({ message: 'Voucher đã hết hạn.' });
+  if (v.redeemedAt)
+    return res.status(409).json({ message: 'Voucher đã được sử dụng.' });
 
   return res.json({ discountPercent: v.discountPercent });
 };
 
 // Store: redeem 1 lần (atomic)
 exports.storeRedeem = async (req, res) => {
-  const code = String(req.params.code || "").toUpperCase();
+  const code = String(req.params.code || '').toUpperCase();
   const amount = Number(req.body?.amount);
 
   if (!Number.isFinite(amount) || amount <= 0) {
-    return res.status(400).json({ message: "Số tiền không hợp lệ." });
+    return res.status(400).json({ message: 'Số tiền không hợp lệ.' });
   }
 
   const now = new Date();
@@ -108,10 +121,12 @@ exports.storeRedeem = async (req, res) => {
   if (!updated) {
     // phân loại lỗi cho UX
     const v = await Voucher.findOne({ code }).lean();
-    if (!v) return res.status(404).json({ message: "Voucher không tồn tại." });
-    if (v.expiresAt && new Date(v.expiresAt).getTime() < Date.now()) return res.status(410).json({ message: "Voucher đã hết hạn." });
-    if (v.redeemedAt) return res.status(409).json({ message: "Voucher đã được sử dụng." });
-    return res.status(400).json({ message: "Không redeem được voucher." });
+    if (!v) return res.status(404).json({ message: 'Voucher không tồn tại.' });
+    if (v.expiresAt && new Date(v.expiresAt).getTime() < Date.now())
+      return res.status(410).json({ message: 'Voucher đã hết hạn.' });
+    if (v.redeemedAt)
+      return res.status(409).json({ message: 'Voucher đã được sử dụng.' });
+    return res.status(400).json({ message: 'Không redeem được voucher.' });
   }
 
   // Log

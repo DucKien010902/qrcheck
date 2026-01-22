@@ -1,4 +1,4 @@
-const mongoose = require("mongoose");
+const mongoose = require('mongoose');
 
 const VoucherSchema = new mongoose.Schema(
   {
@@ -12,4 +12,4 @@ const VoucherSchema = new mongoose.Schema(
   { timestamps: true }
 );
 
-module.exports = mongoose.model("Voucher", VoucherSchema,"vouchersQR");
+module.exports = mongoose.model('Voucher', VoucherSchema, 'vouchersQR');

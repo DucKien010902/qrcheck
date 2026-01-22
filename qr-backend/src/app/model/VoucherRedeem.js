@@ -1,4 +1,4 @@
-const mongoose = require("mongoose");
+const mongoose = require('mongoose');
 
 const VoucherRedeemSchema = new mongoose.Schema(
   {
@@ -9,4 +9,4 @@ const VoucherRedeemSchema = new mongoose.Schema(
   { timestamps: true }
 );
 
-module.exports = mongoose.model("VoucherRedeem", VoucherRedeemSchema);
+module.exports = mongoose.model('VoucherRedeem', VoucherRedeemSchema);

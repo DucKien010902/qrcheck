@@ -11,22 +11,26 @@ exports.login = async (req, res) => {
   }
 
   // ✅ SET COOKIE CHUẨN
-  res.cookie("admin_auth", "true", {
-    httpOnly: true,
-    secure: true,        // HTTPS (Render)
-    sameSite: "none",    // Cross-site (Vercel → Render)
-    path: "/",           // 🔥 BẮT BUỘC
-    maxAge: 24 * 60 * 60 * 1000,
-  });
+  const isProd = process.env.NODE_ENV === "production";
+
+res.cookie("admin_auth", "true", {
+  httpOnly: true,
+  secure: isProd,                 // ✅ PROD true, LOCAL false
+  sameSite: isProd ? "none" : "lax",
+  path: "/",
+  maxAge: 24 * 60 * 60 * 1000,
+});
+
 
   return res.json({ ok: true });
 };
 
 exports.logout = async (_req, res) => {
   res.clearCookie("admin_auth", {
-    path: "/",
-    sameSite: "none",
-    secure: true,
-  });
+  path: "/",
+  secure: process.env.NODE_ENV === "production",
+  sameSite: process.env.NODE_ENV === "production" ? "none" : "lax",
+});
+
   return res.json({ ok: true });
 };

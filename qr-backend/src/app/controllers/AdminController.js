@@ -6,11 +6,13 @@ exports.login = async (req, res) => {
   if (!pin || pin !== ADMIN_PIN) return res.status(401).json({ message: "PIN admin không đúng." });
 
   // session cookie (không maxAge => cookie theo phiên)
-  res.cookie("admin", "1", {
-    httpOnly: true,
-    sameSite: "lax",
-    path: "/",
-  });
+  res.cookie("admin_auth", "true", {
+  httpOnly: true,
+  secure: true,          // 🔥 BẮT BUỘC trên HTTPS
+  sameSite: "none",      // 🔥 BẮT BUỘC cross-site
+  maxAge: 24 * 60 * 60 * 1000, // 1 ngày
+});
+
 
   return res.json({ ok: true });
 };

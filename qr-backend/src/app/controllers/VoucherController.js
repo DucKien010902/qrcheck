@@ -20,6 +20,7 @@ exports.adminList = async (req, res) => {
         discountPercent: v.discountPercent,
         expiresAt: v.expiresAt,
         redeemedAt: v.redeemedAt,
+        redeemedImageUrl: v.redeemedImageUrl || null,
         link,
         qrDataUrl,
       };
@@ -99,8 +100,17 @@ exports.storeRedeem = async (req, res) => {
   const code = String(req.params.code || '').toUpperCase();
   const amount = Number(req.body?.amount);
 
+  // ✅ nhận link ảnh từ frontend
+  const imageUrl = String(req.body?.imageUrl || '');
+  const imagePublicId = req.body?.imagePublicId ? String(req.body.imagePublicId) : null;
+
   if (!Number.isFinite(amount) || amount <= 0) {
     return res.status(400).json({ message: 'Số tiền không hợp lệ.' });
+  }
+
+  // ✅ bắt buộc có ảnh
+  if (!imageUrl || !/^https?:\/\//i.test(imageUrl)) {
+    return res.status(400).json({ message: 'Thiếu ảnh xác nhận (imageUrl).' });
   }
 
   const now = new Date();
@@ -113,7 +123,12 @@ exports.storeRedeem = async (req, res) => {
       expiresAt: { $gt: now },
     },
     {
-      $set: { redeemedAt: now, redeemedAmount: amount },
+      $set: {
+        redeemedAt: now,
+        redeemedAmount: amount,
+        redeemedImageUrl: imageUrl,
+        redeemedImagePublicId: imagePublicId,
+      },
     },
     { new: true }
   ).lean();
@@ -130,7 +145,13 @@ exports.storeRedeem = async (req, res) => {
   }
 
   // Log
-  await VoucherRedeem.create({ code, amount, redeemedAt: now });
+  await VoucherRedeem.create({
+    code,
+    amount,
+    redeemedAt: now,
+    imageUrl,
+    imagePublicId,
+  });
 
   return res.json({ ok: true, redeemedAt: updated.redeemedAt });
 };

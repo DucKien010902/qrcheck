@@ -7,7 +7,11 @@ const VoucherSchema = new mongoose.Schema(
     expiresAt: { type: Date, required: true, index: true },
 
     redeemedAt: { type: Date, default: null, index: true },
-    redeemedAmount: { type: Number, default: null }, // amount trước giảm (tuỳ bạn)
+    redeemedAmount: { type: Number, default: null }, // amount trước giảm
+
+    // ✅ thêm ảnh xác nhận khi redeem
+    redeemedImageUrl: { type: String, default: null },
+    redeemedImagePublicId: { type: String, default: null },
   },
   { timestamps: true }
 );

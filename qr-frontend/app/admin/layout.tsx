@@ -11,7 +11,11 @@ function cx(...classes: Array<string | false | null | undefined>) {
   return classes.filter(Boolean).join(" ");
 }
 
-export default function AdminLayout({ children }: { children: React.ReactNode }) {
+export default function AdminLayout({
+  children,
+}: {
+  children: React.ReactNode;
+}) {
   const router = useRouter();
   const pathname = usePathname();
 
@@ -60,7 +64,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
                   className={cx(
                     "rounded-xl px-3 py-2 transition",
                     "hover:bg-neutral-100",
-                    active && "bg-neutral-100"
+                    active && "bg-neutral-100",
                   )}
                   style={
                     active

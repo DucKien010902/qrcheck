@@ -66,9 +66,7 @@ export default function LoginClient() {
           title="Admin Login"
           accent
           className="w-full"
-          right={
-            <span className="text-xs text-neutral-500">PIN 4 số</span>
-          }
+          right={<span className="text-xs text-neutral-500">PIN 4 số</span>}
         >
           <div className="space-y-5">
             <div className="text-sm text-neutral-600">
@@ -83,7 +81,9 @@ export default function LoginClient() {
               }}
               disabled={loading}
               error={err}
-              hint={loading ? "Đang xác thực..." : "Bạn có thể dán (paste) 4 số."}
+              hint={
+                loading ? "Đang xác thực..." : "Bạn có thể dán (paste) 4 số."
+              }
             />
 
             <Button

@@ -30,7 +30,10 @@ export default function AdminDashboardPage() {
   const [query, setQuery] = useState("");
   const [status, setStatus] = useState<"all" | "used" | "unused">("all");
 
-  const [viewImage, setViewImage] = useState<{ code: string; url: string } | null>(null);
+  const [viewImage, setViewImage] = useState<{
+    code: string;
+    url: string;
+  } | null>(null);
   const [rotation, setRotation] = useState<number>(0);
 
   const frontendBase = useMemo(() => {
@@ -60,7 +63,11 @@ export default function AdminDashboardPage() {
     return items.filter((v) => {
       const okQuery = !q || v.code.toLowerCase().includes(q);
       const okStatus =
-        status === "all" ? true : status === "used" ? Boolean(v.redeemedAt) : !v.redeemedAt;
+        status === "all"
+          ? true
+          : status === "used"
+            ? Boolean(v.redeemedAt)
+            : !v.redeemedAt;
       return okQuery && okStatus;
     });
   }, [items, query, status]);
@@ -137,32 +144,47 @@ export default function AdminDashboardPage() {
       <div className="grid gap-4 md:grid-cols-3">
         <Card title="Tổng số voucher" accent>
           <div className="flex items-end justify-between">
-            <div className="text-3xl font-semibold text-neutral-900">{total}</div>
+            <div className="text-3xl font-semibold text-neutral-900">
+              {total}
+            </div>
             <Badge tone="brand">Tổng</Badge>
           </div>
           <div className="mt-3 h-2 w-full rounded-full bg-neutral-100">
             <div
               className="h-2 rounded-full"
-              style={{ width: `${Math.min(100, usedRate)}%`, backgroundColor: BRAND }}
+              style={{
+                width: `${Math.min(100, usedRate)}%`,
+                backgroundColor: BRAND,
+              }}
             />
           </div>
-          <div className="mt-2 text-xs text-neutral-500">{usedRate}% đã sử dụng</div>
+          <div className="mt-2 text-xs text-neutral-500">
+            {usedRate}% đã sử dụng
+          </div>
         </Card>
 
         <Card title="Đã sử dụng">
           <div className="flex items-end justify-between">
-            <div className="text-3xl font-semibold text-neutral-900">{used}</div>
+            <div className="text-3xl font-semibold text-neutral-900">
+              {used}
+            </div>
             <Badge tone="yellow">Đã dùng</Badge>
           </div>
-          <div className="mt-2 text-xs text-neutral-500">Có redeem thành công</div>
+          <div className="mt-2 text-xs text-neutral-500">
+            Có redeem thành công
+          </div>
         </Card>
 
         <Card title="Chưa sử dụng">
           <div className="flex items-end justify-between">
-            <div className="text-3xl font-semibold text-neutral-900">{unused}</div>
+            <div className="text-3xl font-semibold text-neutral-900">
+              {unused}
+            </div>
             <Badge tone="green">Chưa dùng</Badge>
           </div>
-          <div className="mt-2 text-xs text-neutral-500">Có thể chia sẻ tiếp</div>
+          <div className="mt-2 text-xs text-neutral-500">
+            Có thể chia sẻ tiếp
+          </div>
         </Card>
       </div>
 
@@ -184,7 +206,7 @@ export default function AdminDashboardPage() {
                 className={cx(
                   "rounded-xl border px-3 py-2 text-sm transition",
                   "border-neutral-200 bg-white hover:bg-neutral-50",
-                  status === "all" && "bg-neutral-100"
+                  status === "all" && "bg-neutral-100",
                 )}
                 style={
                   status === "all"
@@ -199,7 +221,7 @@ export default function AdminDashboardPage() {
                 className={cx(
                   "rounded-xl border px-3 py-2 text-sm transition",
                   "border-neutral-200 bg-white hover:bg-neutral-50",
-                  status === "unused" && "bg-neutral-100"
+                  status === "unused" && "bg-neutral-100",
                 )}
                 style={
                   status === "unused"
@@ -214,7 +236,7 @@ export default function AdminDashboardPage() {
                 className={cx(
                   "rounded-xl border px-3 py-2 text-sm transition",
                   "border-neutral-200 bg-white hover:bg-neutral-50",
-                  status === "used" && "bg-neutral-100"
+                  status === "used" && "bg-neutral-100",
                 )}
                 style={
                   status === "used"
@@ -245,18 +267,24 @@ export default function AdminDashboardPage() {
               <tbody className="divide-y divide-neutral-100">
                 {filtered.map((v) => {
                   const link = getLink(v);
-                  const canViewImage = Boolean(v.redeemedAt && v.redeemedImageUrl);
+                  const canViewImage = Boolean(
+                    v.redeemedAt && v.redeemedImageUrl,
+                  );
 
                   return (
                     <tr key={v.code} className="bg-white hover:bg-neutral-50">
                       <td className="px-4 py-3">
-                        <div className="font-medium text-neutral-900">{v.code}</div>
+                        <div className="font-medium text-neutral-900">
+                          {v.code}
+                        </div>
                         <div className="mt-0.5 text-xs text-neutral-500">
                           {v.redeemedAt ? "Đã redeem" : "Chưa redeem"}
                         </div>
                       </td>
 
-                      <td className="px-4 py-3 text-neutral-900">{v.discountPercent}%</td>
+                      <td className="px-4 py-3 text-neutral-900">
+                        {v.discountPercent}%
+                      </td>
 
                       <td className="px-4 py-3 text-neutral-900">
                         {new Date(v.expiresAt).toLocaleString()}
@@ -296,7 +324,9 @@ export default function AdminDashboardPage() {
                               onClick={() => openImage(v)}
                               disabled={!canViewImage}
                               title={
-                                canViewImage ? "Xem ảnh redeem" : "Voucher đã dùng nhưng chưa có ảnh"
+                                canViewImage
+                                  ? "Xem ảnh redeem"
+                                  : "Voucher đã dùng nhưng chưa có ảnh"
                               }
                             >
                               Xem ảnh
@@ -310,7 +340,10 @@ export default function AdminDashboardPage() {
 
                 {!filtered.length && !loading && (
                   <tr>
-                    <td colSpan={5} className="px-4 py-8 text-center text-neutral-500">
+                    <td
+                      colSpan={5}
+                      className="px-4 py-8 text-center text-neutral-500"
+                    >
                       Không có dữ liệu phù hợp bộ lọc hiện tại.
                     </td>
                   </tr>
@@ -334,7 +367,9 @@ export default function AdminDashboardPage() {
             <div className="flex flex-col gap-3 border-b border-neutral-100 p-4 sm:flex-row sm:items-center sm:justify-between">
               <div>
                 <div className="text-xs text-neutral-500">Voucher</div>
-                <div className="text-base font-semibold text-neutral-900">{viewImage.code}</div>
+                <div className="text-base font-semibold text-neutral-900">
+                  {viewImage.code}
+                </div>
               </div>
 
               <div className="flex flex-wrap items-center gap-2">
@@ -362,10 +397,18 @@ export default function AdminDashboardPage() {
                 {({ zoomIn, zoomOut, resetTransform }) => (
                   <>
                     <div className="flex flex-wrap items-center gap-2 border-b border-neutral-100 bg-white p-2">
-                      <Button className="h-8 px-3 text-xs" variant="secondary" onClick={() => zoomOut()}>
+                      <Button
+                        className="h-8 px-3 text-xs"
+                        variant="secondary"
+                        onClick={() => zoomOut()}
+                      >
                         Thu -
                       </Button>
-                      <Button className="h-8 px-3 text-xs" variant="secondary" onClick={() => zoomIn()}>
+                      <Button
+                        className="h-8 px-3 text-xs"
+                        variant="secondary"
+                        onClick={() => zoomIn()}
+                      >
                         Phóng +
                       </Button>
 

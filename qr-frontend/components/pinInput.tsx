@@ -70,8 +70,10 @@ export default function PinInput({
     }
     // if user typed multiple digits quickly, treat as paste-like
     if (d.length > 1) {
-      const merged =
-        (pin.slice(0, i) + d + pin.slice(i + d.length)).slice(0, length);
+      const merged = (pin.slice(0, i) + d + pin.slice(i + d.length)).slice(
+        0,
+        length,
+      );
       setPin(merged);
       const nextIndex = Math.min(length - 1, i + d.length);
       focusIndex(nextIndex);
@@ -123,8 +125,10 @@ export default function PinInput({
     const d = text.replace(/\D/g, "");
     if (!d) return;
 
-    const merged =
-      (pin.slice(0, i) + d + pin.slice(i + d.length)).slice(0, length);
+    const merged = (pin.slice(0, i) + d + pin.slice(i + d.length)).slice(
+      0,
+      length,
+    );
     setPin(merged);
 
     const nextIndex = Math.min(length - 1, i + d.length);
@@ -152,7 +156,7 @@ export default function PinInput({
               "outline-none transition",
               "ring-1 ring-black/5",
               error ? "border-red-300" : "border-neutral-200",
-              "focus:border-neutral-300"
+              "focus:border-neutral-300",
             )}
             style={{
               boxShadow: "none",

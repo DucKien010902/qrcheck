@@ -23,15 +23,20 @@ function HomeCard({
       className={cx(
         "group relative overflow-hidden rounded-2xl border border-neutral-200 bg-white p-5",
         "shadow-sm ring-1 ring-black/5 transition",
-        "hover:-translate-y-0.5 hover:shadow-md"
+        "hover:-translate-y-0.5 hover:shadow-md",
       )}
     >
       {/* Accent line */}
-      <div className="absolute inset-x-0 top-0 h-1" style={{ backgroundColor: BRAND }} />
+      <div
+        className="absolute inset-x-0 top-0 h-1"
+        style={{ backgroundColor: BRAND }}
+      />
 
       <div className="flex items-start justify-between gap-3">
         <div className="min-w-0">
-          <div className="text-base font-semibold text-neutral-900">{title}</div>
+          <div className="text-base font-semibold text-neutral-900">
+            {title}
+          </div>
           <div className="mt-1 text-sm text-neutral-600">{desc}</div>
         </div>
 
@@ -39,7 +44,10 @@ function HomeCard({
           className="inline-flex shrink-0 items-center rounded-full border px-2.5 py-1 text-xs font-medium text-neutral-900"
           style={{ backgroundColor: "#f8e7e9", borderColor: BRAND }}
         >
-          <span className="mr-1 inline-block h-1.5 w-1.5 rounded-full" style={{ backgroundColor: BRAND }} />
+          <span
+            className="mr-1 inline-block h-1.5 w-1.5 rounded-full"
+            style={{ backgroundColor: BRAND }}
+          />
           {badge}
         </span>
       </div>
@@ -89,7 +97,8 @@ export default function Home() {
                   QR Voucher Manager
                 </h1>
                 <p className="mt-1 text-sm text-neutral-600">
-                  Admin tạo voucher → khách quét QR → cửa hàng check/redeem nhanh, có log và ảnh xác nhận.
+                  Admin tạo voucher → khách quét QR → cửa hàng check/redeem
+                  nhanh, có log và ảnh xác nhận.
                 </p>
               </div>
             </div>
@@ -98,7 +107,9 @@ export default function Home() {
           {/* Quick info (no colored text) */}
           <div className="rounded-2xl border border-neutral-200 bg-white px-4 py-3 text-sm shadow-sm ring-1 ring-black/5">
             <div className="text-neutral-900 font-medium">Môi trường demo</div>
-            <div className="text-neutral-600">Giao diện đồng bộ · Accent {BRAND}</div>
+            <div className="text-neutral-600">
+              Giao diện đồng bộ · Accent {BRAND}
+            </div>
           </div>
         </div>
 
@@ -121,7 +132,9 @@ export default function Home() {
 
         {/* Footer note */}
         <div className="mt-8 text-xs text-neutral-500">
-          Gợi ý: Bạn có thể thay <span className="font-medium text-neutral-700">DEMO000000</span> bằng mã thật để test luồng end-to-end.
+          Gợi ý: Bạn có thể thay{" "}
+          <span className="font-medium text-neutral-700">DEMO000000</span> bằng
+          mã thật để test luồng end-to-end.
         </div>
       </div>
     </div>

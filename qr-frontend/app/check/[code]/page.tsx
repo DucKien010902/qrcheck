@@ -16,12 +16,14 @@ export default function StoreCheckPage() {
 
   const code = useMemo(
     () => String(params?.code || "").toUpperCase(),
-    [params?.code]
+    [params?.code],
   );
 
   const [pin, setPin] = useState("");
   const [loading, setLoading] = useState(false);
-  const [msg, setMsg] = useState<{ type: "ok" | "err"; text: string } | null>(null);
+  const [msg, setMsg] = useState<{ type: "ok" | "err"; text: string } | null>(
+    null,
+  );
 
   async function onCheck(p?: string) {
     const value = (p ?? pin).trim();
@@ -39,12 +41,17 @@ export default function StoreCheckPage() {
         body: JSON.stringify({ pin: value }),
       });
 
-      const data = (await res.json().catch(() => ({}))) as Partial<VoucherCheckRes> & {
+      const data = (await res
+        .json()
+        .catch(() => ({}))) as Partial<VoucherCheckRes> & {
         message?: string;
       };
 
       if (!res.ok) {
-        setMsg({ type: "err", text: data?.message || "PIN sai hoặc voucher không hợp lệ." });
+        setMsg({
+          type: "err",
+          text: data?.message || "PIN sai hoặc voucher không hợp lệ.",
+        });
         setPin(""); // reset để nhập lại
         return;
       }
@@ -77,7 +84,8 @@ export default function StoreCheckPage() {
         >
           <div className="space-y-5">
             <p className="text-sm text-neutral-600">
-              Nhập PIN cửa hàng để xác thực voucher. Tối ưu cho điện thoại khi quét QR.
+              Nhập PIN cửa hàng để xác thực voucher. Tối ưu cho điện thoại khi
+              quét QR.
             </p>
 
             <PinInput
@@ -88,7 +96,9 @@ export default function StoreCheckPage() {
               }}
               disabled={loading}
               error={msg?.type === "err" ? msg.text : null}
-              hint={loading ? "Đang kiểm tra..." : "Nhập đủ 4 số sẽ tự kiểm tra."}
+              hint={
+                loading ? "Đang kiểm tra..." : "Nhập đủ 4 số sẽ tự kiểm tra."
+              }
             />
 
             {msg?.type === "ok" && (

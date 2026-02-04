@@ -28,7 +28,7 @@ export function Card({
         "relative overflow-hidden rounded-2xl border bg-white shadow-sm",
         "border-neutral-200/80",
         "ring-1 ring-black/5",
-        className
+        className,
       )}
     >
       {accent && (
@@ -113,7 +113,7 @@ export function Input({
           "outline-none transition",
           error ? "border-red-300" : "border-neutral-200",
           "focus:border-neutral-300 focus:ring-4 focus:ring-neutral-100",
-          className
+          className,
         )}
         style={{
           // Ring brand nhưng không đổi màu text

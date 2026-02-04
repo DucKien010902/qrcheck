@@ -19,11 +19,12 @@ async function uploadToCloudinary(file: File) {
 
   const r = await fetch(
     `https://api.cloudinary.com/v1_1/${CLOUDINARY_CLOUD_NAME}/image/upload`,
-    { method: "POST", body: formData }
+    { method: "POST", body: formData },
   );
 
   const data = await r.json().catch(() => ({}));
-  if (!r.ok) throw new Error(data?.error?.message || "Upload Cloudinary thất bại");
+  if (!r.ok)
+    throw new Error(data?.error?.message || "Upload Cloudinary thất bại");
 
   return { url: data.secure_url as string, publicId: data.public_id as string };
 }
@@ -39,14 +40,16 @@ export default function AmountPage() {
 
   const code = useMemo(
     () => String(routeParams?.code || "").toUpperCase(),
-    [routeParams?.code]
+    [routeParams?.code],
   );
   const discountPercent = Number(sp.get("discount") ?? 0);
 
   const [pin, setPin] = useState("");
   const [rawAmount, setRawAmount] = useState("");
   const [loading, setLoading] = useState(false);
-  const [msg, setMsg] = useState<{ type: "ok" | "err"; text: string } | null>(null);
+  const [msg, setMsg] = useState<{ type: "ok" | "err"; text: string } | null>(
+    null,
+  );
 
   const [photoFile, setPhotoFile] = useState<File | null>(null);
   const [photoPreview, setPhotoPreview] = useState<string>("");
@@ -83,12 +86,15 @@ export default function AmountPage() {
       return;
     }
     if (!photoFile) {
-      setMsg({ type: "err", text: "Vui lòng chụp/tải ảnh xác nhận trước khi redeem." });
+      setMsg({
+        type: "err",
+        text: "Vui lòng chụp/tải ảnh xác nhận trước khi redeem.",
+      });
       return;
     }
 
     const ok = window.confirm(
-      "Xác nhận redeem voucher? Ảnh sẽ được upload và voucher sẽ dùng 1 lần."
+      "Xác nhận redeem voucher? Ảnh sẽ được upload và voucher sẽ dùng 1 lần.",
     );
     if (!ok) return;
 
@@ -113,16 +119,23 @@ export default function AmountPage() {
         return;
       }
 
-      setMsg({ type: "ok", text: "Redeem thành công. Voucher đã được đánh dấu đã dùng." });
+      setMsg({
+        type: "ok",
+        text: "Redeem thành công. Voucher đã được đánh dấu đã dùng.",
+      });
       setTimeout(() => router.push(`/check/${code}`), 1200);
     } catch (e: any) {
-      setMsg({ type: "err", text: e?.message || "Lỗi mạng hoặc server. Vui lòng thử lại." });
+      setMsg({
+        type: "err",
+        text: e?.message || "Lỗi mạng hoặc server. Vui lòng thử lại.",
+      });
     } finally {
       setLoading(false);
     }
   }
 
-  const redeemDisabled = loading || !/^\d{4}$/.test(pin) || amount <= 0 || !photoFile;
+  const redeemDisabled =
+    loading || !/^\d{4}$/.test(pin) || amount <= 0 || !photoFile;
 
   return (
     <div className="min-h-screen bg-neutral-50">
@@ -135,7 +148,9 @@ export default function AmountPage() {
         <div className="mb-4">
           <div className="flex items-start justify-between gap-3">
             <div>
-              <h1 className="text-xl font-semibold text-neutral-900">Cửa hàng · Tính tiền</h1>
+              <h1 className="text-xl font-semibold text-neutral-900">
+                Cửa hàng · Tính tiền
+              </h1>
               <p className="mt-1 text-sm text-neutral-600">
                 Nhập tổng tiền, hệ thống tính chính xác số tiền khách cần trả.
               </p>
@@ -145,7 +160,10 @@ export default function AmountPage() {
               className="inline-flex items-center rounded-full border px-2.5 py-1 text-xs font-medium text-neutral-900"
               style={{ backgroundColor: "#f8e7e9", borderColor: BRAND }}
             >
-              <span className="mr-1 inline-block h-1.5 w-1.5 rounded-full" style={{ backgroundColor: BRAND }} />
+              <span
+                className="mr-1 inline-block h-1.5 w-1.5 rounded-full"
+                style={{ backgroundColor: BRAND }}
+              />
               {discountPercent}%
             </span>
           </div>
@@ -155,13 +173,17 @@ export default function AmountPage() {
         <Card title="Voucher" right={<Badge tone="brand">{code}</Badge>} accent>
           <div className="flex items-center justify-between">
             <span className="text-sm text-neutral-600">Giảm giá</span>
-            <span className="text-lg font-semibold text-neutral-900">{discountPercent}%</span>
+            <span className="text-lg font-semibold text-neutral-900">
+              {discountPercent}%
+            </span>
           </div>
 
           <div className="mt-3 rounded-2xl bg-neutral-50 p-3 ring-1 ring-black/5">
             <div className="flex items-center justify-between text-sm">
               <span className="text-neutral-600">Sau giảm (ước tính)</span>
-              <span className="font-semibold text-neutral-900">{formatVND(finalAmount)}</span>
+              <span className="font-semibold text-neutral-900">
+                {formatVND(finalAmount)}
+              </span>
             </div>
           </div>
         </Card>
@@ -172,7 +194,9 @@ export default function AmountPage() {
             <div className="space-y-5">
               {/* PIN */}
               <div>
-                <div className="mb-2 text-sm font-medium text-neutral-900">PIN cửa hàng</div>
+                <div className="mb-2 text-sm font-medium text-neutral-900">
+                  PIN cửa hàng
+                </div>
                 <PinInput
                   value={pin}
                   onChange={(v) => {
@@ -181,7 +205,8 @@ export default function AmountPage() {
                   }}
                   disabled={loading}
                   error={
-                    msg?.type === "err" && msg.text.toLowerCase().includes("pin")
+                    msg?.type === "err" &&
+                    msg.text.toLowerCase().includes("pin")
                       ? msg.text
                       : null
                   }
@@ -213,7 +238,7 @@ export default function AmountPage() {
                       onClick={() => setQuickAmount(v)}
                       className={cx(
                         "rounded-full border px-3 py-1.5 text-xs font-medium text-neutral-900",
-                        "bg-white hover:bg-neutral-50"
+                        "bg-white hover:bg-neutral-50",
                       )}
                       style={{
                         borderColor: "rgba(182,32,43,0.18)",
@@ -230,67 +255,66 @@ export default function AmountPage() {
 
           {/* Photo proof */}
           {/* Photo proof */}
-<Card title="Ảnh xác nhận" accent>
-  <div className="space-y-3">
-    <p className="text-sm text-neutral-600">
-      Chụp hoặc tải ảnh để lưu bằng chứng redeem (bắt buộc).
-    </p>
+          <Card title="Ảnh xác nhận" accent>
+            <div className="space-y-3">
+              <p className="text-sm text-neutral-600">
+                Chụp hoặc tải ảnh để lưu bằng chứng redeem (bắt buộc).
+              </p>
 
-    <div className="grid gap-2">
-      <label
-        className="flex cursor-pointer items-center justify-center rounded-2xl border bg-white px-4 py-3 text-sm font-medium hover:bg-neutral-50"
-        style={{
-          borderColor: "rgba(182,32,43,0.22)",
-          boxShadow: "0 1px 0 rgba(0,0,0,0.03)",
-        }}
-      >
-        <input
-          type="file"
-          accept="image/*"
-          capture="environment"
-          onChange={(e) => onPickPhoto(e.target.files?.[0] ?? null)}
-          className="hidden"
-        />
-        {photoFile ? "Chọn ảnh khác" : "Chụp / Chọn ảnh"}
-      </label>
+              <div className="grid gap-2">
+                <label
+                  className="flex cursor-pointer items-center justify-center rounded-2xl border bg-white px-4 py-3 text-sm font-medium hover:bg-neutral-50"
+                  style={{
+                    borderColor: "rgba(182,32,43,0.22)",
+                    boxShadow: "0 1px 0 rgba(0,0,0,0.03)",
+                  }}
+                >
+                  <input
+                    type="file"
+                    accept="image/*"
+                    capture="environment"
+                    onChange={(e) => onPickPhoto(e.target.files?.[0] ?? null)}
+                    className="hidden"
+                  />
+                  {photoFile ? "Chọn ảnh khác" : "Chụp / Chọn ảnh"}
+                </label>
 
-      {photoPreview ? (
-        <div className="overflow-hidden rounded-2xl border border-neutral-200 bg-white">
-          <img
-            src={photoPreview}
-            alt="preview"
-            className="h-48 w-full object-cover"
-          />
-          <div className="flex items-center justify-between gap-2 border-t border-neutral-100 p-3">
-            <div className="min-w-0">
-              <div className="truncate text-sm font-medium text-neutral-900">
-                Ảnh đã chọn
-              </div>
-              <div className="truncate text-xs text-neutral-500">
-                {photoFile?.name || "photo.jpg"}
+                {photoPreview ? (
+                  <div className="overflow-hidden rounded-2xl border border-neutral-200 bg-white">
+                    <img
+                      src={photoPreview}
+                      alt="preview"
+                      className="h-48 w-full object-cover"
+                    />
+                    <div className="flex items-center justify-between gap-2 border-t border-neutral-100 p-3">
+                      <div className="min-w-0">
+                        <div className="truncate text-sm font-medium text-neutral-900">
+                          Ảnh đã chọn
+                        </div>
+                        <div className="truncate text-xs text-neutral-500">
+                          {photoFile?.name || "photo.jpg"}
+                        </div>
+                      </div>
+
+                      <Button
+                        variant="secondary"
+                        className="h-9 px-3 text-xs"
+                        onClick={() => onPickPhoto(null)}
+                        type="button"
+                        disabled={loading}
+                      >
+                        Xoá
+                      </Button>
+                    </div>
+                  </div>
+                ) : (
+                  <div className="rounded-2xl border border-dashed border-neutral-200 bg-neutral-50 p-4 text-center text-sm text-neutral-600">
+                    Chưa có ảnh. Hãy chụp hoặc chọn ảnh để tiếp tục.
+                  </div>
+                )}
               </div>
             </div>
-
-            <Button
-              variant="secondary"
-              className="h-9 px-3 text-xs"
-              onClick={() => onPickPhoto(null)}
-              type="button"
-              disabled={loading}
-            >
-              Xoá
-            </Button>
-          </div>
-        </div>
-      ) : (
-        <div className="rounded-2xl border border-dashed border-neutral-200 bg-neutral-50 p-4 text-center text-sm text-neutral-600">
-          Chưa có ảnh. Hãy chụp hoặc chọn ảnh để tiếp tục.
-        </div>
-      )}
-    </div>
-  </div>
-</Card>
-
+          </Card>
 
           {/* Result */}
           <Card title="Kết quả tính tiền" accent>
@@ -298,21 +322,32 @@ export default function AmountPage() {
               <div className="rounded-2xl bg-neutral-50 p-3 ring-1 ring-black/5">
                 <div className="flex items-center justify-between text-sm">
                   <span className="text-neutral-600">Tổng tiền</span>
-                  <span className="font-semibold text-neutral-900">{formatVND(amount)}</span>
+                  <span className="font-semibold text-neutral-900">
+                    {formatVND(amount)}
+                  </span>
                 </div>
                 <div className="mt-2 flex items-center justify-between text-sm">
-                  <span className="text-neutral-600">Giảm ({discountPercent}%)</span>
-                  <span className="font-semibold text-neutral-900">- {formatVND(discount)}</span>
+                  <span className="text-neutral-600">
+                    Giảm ({discountPercent}%)
+                  </span>
+                  <span className="font-semibold text-neutral-900">
+                    - {formatVND(discount)}
+                  </span>
                 </div>
               </div>
 
               <div
                 className="rounded-2xl border p-4"
-                style={{ borderColor: "rgba(182,32,43,0.22)", backgroundColor: "rgba(182,32,43,0.06)" }}
+                style={{
+                  borderColor: "rgba(182,32,43,0.22)",
+                  backgroundColor: "rgba(182,32,43,0.06)",
+                }}
               >
                 <div className="flex items-center justify-between">
                   <div>
-                    <div className="text-xs text-neutral-600">Khách cần trả</div>
+                    <div className="text-xs text-neutral-600">
+                      Khách cần trả
+                    </div>
                     <div className="mt-1 text-2xl font-semibold text-neutral-900">
                       {formatVND(finalAmount)}
                     </div>
@@ -334,7 +369,7 @@ export default function AmountPage() {
                 "rounded-2xl border px-4 py-3 text-sm",
                 msg.type === "ok"
                   ? "border-green-200 bg-green-50 text-neutral-900"
-                  : "border-red-200 bg-red-50 text-neutral-900"
+                  : "border-red-200 bg-red-50 text-neutral-900",
               )}
             >
               <div className="font-medium">
